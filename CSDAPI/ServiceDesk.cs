@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -137,6 +138,41 @@ namespace CSDAPI
 		/// <returns></returns>
 		public IEnumerable<TicketCategory> GetTicketCategories() => GetTicketCategoriesAsync().Result;
 
+		/// <summary>
+		/// Gets the users from the server.
+		/// </summary>
+		/// <param name="keyword">A keyword to search for the user by name or address.</param>
+		/// <param name="pageNum">The page to retrieve.</param>
+		/// <param name="perPage">The number of records to return per page.</param>
+		/// <returns></returns>
+		public async Task<IEnumerable<User>> GetUsersAsync(
+			string keyword = null, 
+			int pageNum = 1,
+			int perPage = 50)
+		{
+			var data = new Dictionary<string, string>()
+			{
+				{"pageNo", pageNum.ToString()},
+				{"pageSize", perPage.ToString()}
+			};
+			if (!string.IsNullOrWhiteSpace(keyword))
+			{
+				data["keyword"] = keyword;
+			}
+
+			var result = await ExecServiceAsync<GetUsersResult>("getUsers", data);
+			return result.Users ?? new User[0];
+		}
+		
+		/// <summary>
+		/// Gets the users from the server.
+		/// </summary>
+		/// <param name="keyword">A keyword to search for the user by name or address.</param>
+		/// <param name="pageNum">The page to retrieve.</param>
+		/// <param name="perPage">The number of records to return per page.</param>
+		/// <returns></returns>
+		public IEnumerable<User> GetUsers(string keyword = null, int pageNum = 1, int perPage = 50)
+			=> GetUsersAsync(keyword, pageNum, perPage).Result;
 		
 		
 		/// <inheritdoc />
