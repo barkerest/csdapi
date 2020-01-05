@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CSDAPI.Implementations.Internal
+namespace CSDAPI.Models.Internal
 {
 	internal class ServiceResultBase : IServiceResultBase
 	{

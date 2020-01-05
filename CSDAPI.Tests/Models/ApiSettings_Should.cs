@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
-using CSDAPI.Implementations;
+using CSDAPI.Models;
 using Xunit;
 
 namespace CSDAPI.Tests.Models

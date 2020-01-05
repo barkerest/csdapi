@@ -1,4 +1,4 @@
-using CSDAPI.Implementations.Internal;
+using CSDAPI.Models.Internal;
 
 namespace CSDAPI.Exceptions
 {

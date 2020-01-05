@@ -6,9 +6,9 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CSDAPI.Exceptions;
-using CSDAPI.Implementations;
-using CSDAPI.Implementations.Internal;
 using CSDAPI.Interfaces;
+using CSDAPI.Models;
+using CSDAPI.Models.Internal;
 
 namespace CSDAPI
 {

@@ -1,4 +1,4 @@
-namespace CSDAPI.Implementations.Internal
+namespace CSDAPI.Models.Internal
 {
 	internal interface IServiceResultBase
 	{

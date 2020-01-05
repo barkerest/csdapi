@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Web;
 using CSDAPI.Interfaces;
 
-namespace CSDAPI.Implementations
+namespace CSDAPI.Models
 {
 	/// <summary>
 	/// Standard implementation of IApiSettings.

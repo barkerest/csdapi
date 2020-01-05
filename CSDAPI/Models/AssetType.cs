@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using CSDAPI.Converters;
 
-namespace CSDAPI.Implementations
+namespace CSDAPI.Models
 {
 	/// <summary>
 	/// An asset type.
@@ -15,7 +12,7 @@ namespace CSDAPI.Implementations
 		/// The asset type ID.
 		/// </summary>
 		[JsonPropertyName("id")]
-		[JsonConverter(typeof(IntStoredAsString))]
+		[JsonIntStoredAsString]
 		public int ID { get; set; }
 		
 		/// <summary>
@@ -34,7 +31,7 @@ namespace CSDAPI.Implementations
 		/// Is this a default (built-in) asset type?
 		/// </summary>
 		[JsonPropertyName("isDefault")]
-		[JsonConverter(typeof(BoolStoredAsIntString))]
+		[JsonBoolStoredAsIntString]
 		public bool IsDefault { get; set; }
 	}
 }

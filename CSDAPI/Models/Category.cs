@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 using CSDAPI.Converters;
 
-namespace CSDAPI.Implementations
+namespace CSDAPI.Models
 {
 	public class Category
 	{
 		[JsonPropertyName("id")]
-		[JsonConverter(typeof(IntStoredAsString))]
+		[JsonIntStoredAsString]
 		public int ID { get; set; }
 		
 		[JsonPropertyName("name")]

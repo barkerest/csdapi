@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using CSDAPI.Implementations;
+using CSDAPI.Models;
 using CSDAPI.Tests.Config;
 using Xunit;
 
