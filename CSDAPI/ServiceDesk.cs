@@ -121,10 +121,24 @@ namespace CSDAPI
 		/// <returns></returns>
 		public IEnumerable<Category> GetCategories() => GetCategoriesAsync().Result;
 
+		/// <summary>
+		/// Gets the ticket categories from the server.
+		/// </summary>
+		/// <returns></returns>
+		public async Task<IEnumerable<TicketCategory>> GetTicketCategoriesAsync()
+		{
+			var result = await ExecServiceAsync<GetTicketCategoriesResult>("getticketcategories", null);
+			return result.TicketCategories ?? new TicketCategory[0];
+		}
 		
-		
-		
+		/// <summary>
+		/// Gets the ticket categories from the server.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<TicketCategory> GetTicketCategories() => GetTicketCategoriesAsync().Result;
 
+		
+		
 		/// <inheritdoc />
 		public void Dispose()
 		{

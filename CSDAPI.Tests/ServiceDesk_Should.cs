@@ -34,6 +34,14 @@ namespace CSDAPI.Tests
 			Assert.NotNull(result);
 			_output.WriteLine($"Retrieved {result.Count()} categories.");
 		}
-		
+
+		[Fact]
+		public void QueryTicketCategories()
+		{
+			var sd = new ServiceDesk(_settings.GetApiSettings());
+			var result = sd.GetTicketCategories();
+			Assert.NotNull(result);
+			_output.WriteLine($"Retrieved {result.Count()} ticket categories.");
+		}
 	}
 }
