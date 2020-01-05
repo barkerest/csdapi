@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.WebSockets;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CSDAPI.Exceptions;
@@ -173,8 +175,126 @@ namespace CSDAPI
 		/// <returns></returns>
 		public IEnumerable<User> GetUsers(string keyword = null, int pageNum = 1, int perPage = 50)
 			=> GetUsersAsync(keyword, pageNum, perPage).Result;
-		
-		
+
+		/// <summary>
+		/// Finds a user by email.
+		/// </summary>
+		/// <param name="email"></param>
+		/// <returns></returns>
+		public async Task<User> FindUserAsync(string email)
+		{
+			var list = await GetUsersAsync(keyword: email);
+			return list.FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Finds a user by email.
+		/// </summary>
+		/// <param name="email"></param>
+		/// <returns></returns>
+		public User FindUser(string email) => FindUserAsync(email).Result;
+
+		/// <summary>
+		/// Creates a user with the specified name and email.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="email"></param>
+		/// <returns></returns>
+		public async Task<int> CreateUserAsync(string name, string email)
+		{
+			var data = new Dictionary<string, string>()
+			{
+				{"name", name},
+				{"email", email}
+			};
+			var result = await ExecServiceAsync<CreateUserResult>("createuser", data);
+			return result.UserId?.ID ?? 0;
+		}
+
+		/// <summary>
+		/// Creates a user with the specified name and email.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="email"></param>
+		/// <returns></returns>
+		public int CreateUser(string name, string email) => CreateUserAsync(name, email).Result;
+
+		/// <summary>
+		/// Finds or creates a user with the specified email.
+		/// </summary>
+		/// <param name="email"></param>
+		/// <param name="name">Optional name to set if new user is created.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
+		public async Task<User> FindOrCreateUserAsync(string email, string name = null)
+		{
+			if (string.IsNullOrWhiteSpace(email)) throw new ArgumentException("Email cannot be blank.");
+			if (!email.Contains("@")) throw new ArgumentException("Email must be in user@domain format.");
+			if (string.IsNullOrWhiteSpace(name)) name = email.Split('@')[0];
+
+			var result = await FindUserAsync(email);
+			
+			if (result is null)
+			{
+				result = new User()
+				{
+					ID = await CreateUserAsync(name, email),
+					Name = name,
+					Address = email,
+				};
+			}
+
+			if (result.ID == 0) return null;
+			
+			return result;
+		}
+
+		/// <summary>
+		/// Finds or creates a user with the specified email.
+		/// </summary>
+		/// <param name="email"></param>
+		/// <param name="name">Optional name to set if new user is created.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException"></exception>
+		public User FindOrCreateUser(string email, string name = null) => FindOrCreateUserAsync(email, name).Result;
+
+		/// <summary>
+		/// Updates a user.
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="ArgumentException"></exception>
+		public async Task<bool> UpdateUserAsync(User user)
+		{
+			if (user is null) throw new ArgumentNullException(nameof(user));
+			if (user.ID == 0) throw new ArgumentException("User ID cannot be 0.");
+			var data = new Dictionary<string, string>()
+			{
+				{"id", user.ID.ToString()},
+				{"name", user.Name},
+				{"email", user.Address}
+			};
+			
+			try
+			{
+				var result = await ExecServiceAsync<ServiceResultBase>("updateuser", data);
+				return result.Code == 200;
+			}
+			catch (ApiException e) when (e is ApiHttpException || e is ApiErrorException)
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Updates a user.
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
+		public bool UpdateUser(User user) => UpdateUserAsync(user).Result;
+
+
 		/// <inheritdoc />
 		public void Dispose()
 		{
